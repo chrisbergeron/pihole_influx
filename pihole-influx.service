@@ -1,0 +1,11 @@
+[Unit]
+Description=PiHole Influx - Send pihole stats to influxdb for Grafana
+After=multi-user.target
+
+[Service]
+User=root
+Type=idle
+ExecStart=/usr/bin/python /opt/pihole_influx/pihole_influx.py > /tmp/pihole_influx.log 2>&1
+
+[Install]
+WantedBy=multi-user.target
