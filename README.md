@@ -2,7 +2,7 @@
 
 A couple of basic scripts for inserting pihole data into influxdb for graphing.
 
-pihole_influx.py - A python script for inserting records into influxdb.
+*pihole_influx.py* - A python script for inserting records into influxdb.
 
 Configuration options:
 ``` bash
@@ -15,8 +15,7 @@ INFLUXDB_PASSWORD = "password"
 INFLUXDB_DATABASE = "piholestats"
 DELAY = 600 # seconds
 ```
-
-pihole-influx.service - A SystemD Unit File for starting pihole_influx at boot (and logging)
+*pihole-influx.service* - A SystemD Unit File for starting pihole_influx at boot (and logging)
 On Centos7, put this file in /lib/systemd/system/.
 
 Run:
@@ -30,3 +29,7 @@ To run pihole_influx.py from the command line without the startup script:
 ```bash
 /usr/bin/python ./pihole_influx.py
 ```
+
+I installed this script in /opt/pihole_influx.  If you put it somewhere else you'll have to update the systemD startup script.
+
+NOTE: The script pauses for DELAY seconds at start because I had problems with the systemD script if it was started to early.  If you know how to fix this please submit a pull request.
