@@ -5,6 +5,7 @@ A couple of basic scripts for inserting pihole data into influxdb for graphing.
 pihole_influx.py - A python script for inserting records into influxdb.
 
 Configuration options:
+``` bash
 HOSTNAME = "ns-01" # Pi-hole hostname to report in InfluxDB for each measurement
 PIHOLE_API = "http://PI_HOLE_IP_ADDRESS_HERE/admin/api.php"
 INFLUXDB_SERVER = "127.0.0.1" # IP or hostname to InfluxDB server
@@ -13,5 +14,19 @@ INFLUXDB_USERNAME = "username"
 INFLUXDB_PASSWORD = "password"
 INFLUXDB_DATABASE = "piholestats"
 DELAY = 600 # seconds
+```
 
 pihole-influx.service - A SystemD Unit File for starting pihole_influx at boot (and logging)
+On Centos7, put this file in /lib/systemd/system/.
+
+Run:
+``` bash
+systemctl daemon-reload
+systemctl enable pihole-influx
+systemctl start pihole-influx
+```
+
+To run pihole_influx.py from the command line without the startup script:
+```bash
+/usr/bin/python ./pihole_influx.py
+```
