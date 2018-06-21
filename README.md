@@ -33,3 +33,19 @@ To run pihole_influx.py from the command line without the startup script:
 I installed this script in /opt/pihole_influx.  If you put it somewhere else you'll have to update the systemD startup script.
 
 NOTE: The script pauses for DELAY seconds at start because I had problems with the systemD script if it was started to early.  If you know how to fix this please submit a pull request.
+
+##Troubleshooting##
+If you get the following error:
+```
+Traceback (most recent call last): File "./pihole_influx.py", line 11, in <module> from influxdb import InfluxDBClient
+```
+
+You'll need to install the python-influxdb module for python.  On a raspberry pi, you can do this with:
+```
+sudo apt-get install python-influxdb
+```
+
+Or on CentOS / RHEL:
+```
+yum install python-influxdb
+```
