@@ -39,7 +39,6 @@ If you get the following error:
 ```
 Traceback (most recent call last): File "./pihole_influx.py", line 11, in <module> from influxdb import InfluxDBClient
 ```
-
 You'll need to install the python-influxdb module for python.  On a raspberry pi, you can do this with:
 ```
 sudo apt-get install python-influxdb
@@ -49,3 +48,9 @@ Or on CentOS / RHEL:
 ```
 yum install python-influxdb
 ```
+
+If you get this error:
+```
+Traceback (most recent call last): File "./pihole_influx.py", line 8, in <module> import requests ImportError: No module named requests
+```
+You'll need to install the python-requests module.
