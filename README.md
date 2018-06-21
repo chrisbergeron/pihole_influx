@@ -48,6 +48,7 @@ Or on CentOS / RHEL:
 ```
 yum install python-influxdb
 ```
+---
 
 If you get this error:
 ```
