@@ -34,7 +34,7 @@ I installed this script in /opt/pihole_influx.  If you put it somewhere else you
 
 NOTE: The script pauses for DELAY seconds at start because I had problems with the systemD script if it was started to early.  If you know how to fix this please submit a pull request.
 
-##Troubleshooting##
+# Troubleshooting
 If you get the following error:
 ```
 Traceback (most recent call last): File "./pihole_influx.py", line 11, in <module> from influxdb import InfluxDBClient
