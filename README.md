@@ -12,7 +12,7 @@ INFLUXDB_SERVER = "127.0.0.1" # IP or hostname to InfluxDB server
 INFLUXDB_PORT = 8086 # Port on InfluxDB server
 INFLUXDB_USERNAME = "username"
 INFLUXDB_PASSWORD = "password"
-INFLUXDB_DATABASE = "piholestats"
+INFLUXDB_DATABASE = "piholestats" # Or database name of your choice
 DELAY = 600 # seconds
 ```
 *pihole-influx.service* - A SystemD Unit File for starting pihole_influx at boot (and logging)
