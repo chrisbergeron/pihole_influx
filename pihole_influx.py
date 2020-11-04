@@ -3,6 +3,7 @@
 # Script originally created by JON HAYWARD: https://fattylewis.com/Graphing-pi-hole-stats/
 # Adapted to work with InfluxDB by /u/tollsjo in December 2016
 # Updated by Cludch December 2016
+# Updated by andyrb412 November 2020
 
 # To install and run the script as a service under SystemD. See: https://linuxconfig.org/how-to-automatically-execute-shell-script-at-startup-boot-on-systemd-linux
 
@@ -19,20 +20,25 @@ INFLUXDB_PASSWORD = "password"
 INFLUXDB_DATABASE = "piholestats"
 DELAY = 600 # seconds
 
-def send_msg(domains_being_blocked, dns_queries_today, ads_percentage_today, ads_blocked_today):
+print("Waiting", DELAY, "seconds before start.")
 
+def send_msg(domains_being_blocked, dns_queries_today, ads_percentage_today, ads_blocked_today, queries_fowarded, queries_cached, unique_clients):
+	
 	json_body = [
 	    {
 	        "measurement": "piholestats." + HOSTNAME.replace(".", "_"),
 	        "tags": {
 	            "host": HOSTNAME
 	        },
-	        "fields": {
-	            "domains_being_blocked": int(domains_being_blocked),
+	      "fields": {
+                    "domains_being_blocked": int(domains_being_blocked),
                     "dns_queries_today": int(dns_queries_today),
                     "ads_percentage_today": float(ads_percentage_today),
-                    "ads_blocked_today": int(ads_blocked_today)
-	        }
+                    "ads_blocked_today": int(ads_blocked_today),
+                    "queries_forwarded": int(queries_forwarded),
+                    "queries_cached": int(queries_cached),
+                    "unique_clients": int(unique_clients)
+                }
 	    }
 	]
         print (json_body)
@@ -54,6 +60,9 @@ if __name__ == '__main__':
           dns_queries_today = (API_out['dns_queries_today'])
           ads_percentage_today = (API_out['ads_percentage_today'])
           ads_blocked_today = (API_out['ads_blocked_today'])
+          queries_forwarded = (API_out['queries_forwarded'])
+          queries_cached = (API_out['queries_cached'])
+          unique_clients = (API_out['unique_clients'])
           # print(domains_being_blocked, dns_queries_today, ads_percentage_today, ads_blocked_today)
 
-          send_msg(domains_being_blocked, dns_queries_today, ads_percentage_today, ads_blocked_today)
+          send_msg(domains_being_blocked, dns_queries_today, ads_percentage_today, ads_blocked_today, queries_forwarded, queries_cached, unique_clients)
