@@ -1,0 +1,13 @@
+version: '2'
+services:
+  pihole_influx:
+    build: .
+    container_name: pihole_influx
+    environment:
+      - INFLUXDB_SERVER=172.0.0.1
+      - INFLUXDB_PORT=8086
+      - INFLUXDB_USERNAME=username
+      - INFLUXDB_PASSWORD=password
+      - INFLUXDB_DATABASE=piholestats
+      - DELAY=600
+      - PIHOLE_HOSTS=pi.hole,pihole2

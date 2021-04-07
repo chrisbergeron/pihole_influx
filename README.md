@@ -6,8 +6,7 @@ A couple of basic scripts for inserting pihole data into influxdb for graphing.
 
 Configuration options:
 ``` bash
-HOSTNAME = "ns-01" # Pi-hole hostname to report in InfluxDB for each measurement
-PIHOLE_API = "http://PI_HOLE_IP_ADDRESS_HERE/admin/api.php"
+HOSTNAMES = "ns-01" # Pi-hole hostname(s) to report in InfluxDB for each measurement. Comma separated list.
 INFLUXDB_SERVER = "127.0.0.1" # IP or hostname to InfluxDB server
 INFLUXDB_PORT = 8086 # Port on InfluxDB server
 INFLUXDB_USERNAME = "username"
@@ -15,6 +14,10 @@ INFLUXDB_PASSWORD = "password"
 INFLUXDB_DATABASE = "piholestats"
 DELAY = 600 # seconds
 ```
+*docker-compose.yml* - An example Docker setup to run this script
+
+Configuration options above can be specified within the environment section of the compose file.
+
 *pihole-influx.service* - A SystemD Unit File for starting pihole_influx at boot (and logging)
 On Centos7, put this file in /lib/systemd/system/.
 
