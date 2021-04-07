@@ -5,7 +5,8 @@ A couple of basic scripts for inserting pihole data into influxdb for graphing.
 *pihole_influx.py* - A python script for inserting records into influxdb.
 
 Configuration options:
-``` bash
+
+```bash
 HOSTNAME = "ns-01" # Pi-hole hostname to report in InfluxDB for each measurement
 PIHOLE_API = "http://PI_HOLE_IP_ADDRESS_HERE/admin/api.php"
 INFLUXDB_SERVER = "127.0.0.1" # IP or hostname to InfluxDB server
@@ -15,17 +16,20 @@ INFLUXDB_PASSWORD = "password"
 INFLUXDB_DATABASE = "piholestats" # Or database name of your choice
 DELAY = 600 # seconds
 ```
+
 *pihole-influx.service* - A SystemD Unit File for starting pihole_influx at boot (and logging)
 On Centos7, put this file in /lib/systemd/system/.
 
 Run:
-``` bash
+
+```bash
 systemctl daemon-reload
 systemctl enable pihole-influx
 systemctl start pihole-influx
 ```
 
 To run pihole_influx.py from the command line without the startup script:
+
 ```bash
 /usr/bin/python ./pihole_influx.py
 ```
@@ -36,22 +40,29 @@ NOTE: The script pauses for DELAY seconds at start because I had problems with t
 
 ### Troubleshooting
 If you get the following error:
+
 ```
 Traceback (most recent call last): File "./pihole_influx.py", line 11, in <module> from influxdb import InfluxDBClient
 ```
+
 You'll need to install the python-influxdb module for python.  On a raspberry pi, you can do this with:
-```
+
+```bash
 sudo apt-get install python-influxdb
 ```
 
 Or on CentOS / RHEL:
-```
+
+```bash
 yum install python-influxdb
 ```
+
 ---
 
 If you get this error:
-```
+
+```bash
 Traceback (most recent call last): File "./pihole_influx.py", line 8, in <module> import requests ImportError: No module named requests
 ```
+
 You'll need to install the python-requests module.
