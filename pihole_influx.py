@@ -16,7 +16,7 @@ from influxdb import InfluxDBClient
 
 # Modify these values if running as a standalone script
 _DEFAULTS = {
-    'INFLUXDB_SERVER': "http://127.0.0.1",  # IP or hostname to InfluxDB server
+    'INFLUXDB_SERVER': "127.0.0.1",  # IP or hostname to InfluxDB server
     'INFLUXDB_PORT': 8086,  # Port on InfluxDB server
     'INFLUXDB_USERNAME': "username",
     'INFLUXDB_PASSWORD': "password",
@@ -124,7 +124,7 @@ if __name__ == '__main__':
         for host in config['PIHOLE_HOSTS']:
 
             # Get PiHole Stats
-               pihole_api = "{}/admin/api.php".format(host)
+            pihole_api = "{}/admin/api.php".format(host)
             logger.info("Attempting to contact {} with URL {}".format(host, pihole_api))
             api = requests.get(pihole_api)  # URI to pihole server api
             API_out = api.json()
