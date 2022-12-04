@@ -78,7 +78,7 @@ def check_db_status(config, logger):
     return True
 
 
-def send_msg(config, logger, hostname, domains_being_blocked, dns_queries_today, ads_percentage_today, ads_blocked_today):
+def send_msg(config, logger, hostname, domains_being_blocked, dns_queries_today, ads_percentage_today, ads_blocked_today, unique_clients, unique_domains, status):
     """ Sends message to InfluxDB server defined in config """
     json_body = [
         {
@@ -90,7 +90,10 @@ def send_msg(config, logger, hostname, domains_being_blocked, dns_queries_today,
                 "domains_being_blocked": int(domains_being_blocked),
                 "dns_queries_today": int(dns_queries_today),
                 "ads_percentage_today": float(ads_percentage_today),
-                "ads_blocked_today": int(ads_blocked_today)
+                "ads_blocked_today": int(ads_blocked_today),
+                "unique_clients": int(unique_clients),
+                "unique_domains": int(unique_domains),
+                "status": status
             }
         }
     ]
@@ -148,9 +151,12 @@ if __name__ == '__main__':
             dns_queries_today = (API_out['dns_queries_today'])
             ads_percentage_today = (API_out['ads_percentage_today'])
             ads_blocked_today = (API_out['ads_blocked_today'])
+            unique_clients = (API_out['unique_clients'])
+            unique_domains = (API_out['unique_domains'])
+            status = (API_out['status'])
 
             # Update DB
-            send_msg(config, logger, host, domains_being_blocked, dns_queries_today, ads_percentage_today, ads_blocked_today)
+            send_msg(config, logger, host, domains_being_blocked, dns_queries_today, ads_percentage_today, ads_blocked_today, unique_clients, unique_domains, status)
             i = i + 1
 
         # Wait...
