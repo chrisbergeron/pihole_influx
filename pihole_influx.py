@@ -4,6 +4,7 @@
 # Adapted to work with InfluxDB by /u/tollsjo in December 2016
 # Updated by Cludch December 2016
 # Updated and dockerised by rarosalion in September 2019
+# Updated by Dick Pluim December 2022 
 
 # To install and run the script as a service under SystemD. See: https://linuxconfig.org/how-to-automatically-execute-shell-script-at-startup-boot-on-systemd-linux
 
@@ -22,7 +23,8 @@ _DEFAULTS = {
     'INFLUXDB_PASSWORD': "password",
     'INFLUXDB_DATABASE': "piholestats",
     'DELAY': 600,  # seconds
-    'PIHOLE_HOSTS': ["pi.hole"]  # Pi-hole hostname(s)
+    'PIHOLE_HOSTS': ["pi.hole"],  # Pi-hole hostname(s)
+    'PIHOLE_TOKENS': [""] 
 }
 
 
@@ -42,10 +44,16 @@ def get_config():
         config[var_name] = os.getenv(var_name, _DEFAULTS[var_name])
         if var_name == 'PIHOLE_HOSTS' and ',' in config[var_name]:
             config[var_name] = config[var_name].split(',')
+        if var_name == 'PIHOLE_TOKENS' and ',' in config[var_name]:
+            config[var_name] = config[var_name].split(',')
 
     # Make sure PIHOLE_HOSTS is a list (even if it's just one entry)
     if not isinstance(config['PIHOLE_HOSTS'], list):
         config['PIHOLE_HOSTS'] = [config['PIHOLE_HOSTS']]
+
+    # Make sure PIHOLE_TOKENS is a list (even if it's just one entry)
+    if not isinstance(config['PIHOLE_TOKENS'], list):
+        config['PIHOLE_TOKENS'] = [config['PIHOLE_TOKENS']]
 
     return config
 
@@ -74,7 +82,7 @@ def send_msg(config, logger, hostname, domains_being_blocked, dns_queries_today,
     """ Sends message to InfluxDB server defined in config """
     json_body = [
         {
-            "measurement": "piholestats." + hostname.replace(".", "_"),
+            "measurement": "piholestats." + hostname.replace(".", "_").replace('https://','').replace('http://',''),
             "tags": {
                 "host": hostname
             },
@@ -111,6 +119,8 @@ if __name__ == '__main__':
 
     # Get configuration details
     config = get_config()
+    number_of_servers = len(config['PIHOLE_HOSTS'])
+    number_of_tokens = len(config['PIHOLE_TOKENS'])  # not needed actually
     logger.info("Querying {} pihole servers: {}".format(len(config['PIHOLE_HOSTS']), config['PIHOLE_HOSTS']))
     logger.info("Logging to InfluxDB server {}:{}".format(
         config['INFLUXDB_SERVER'], config['INFLUXDB_PORT']
@@ -118,14 +128,20 @@ if __name__ == '__main__':
 
     # Create database if it doesn't exist
     check_db_status(config, logger)
-
+    
     # Loop pulling stats from pihole, and pushing to influxdb
     while True:
-        for host in config['PIHOLE_HOSTS']:
-
+        i = 0
+        for i in range(number_of_servers): 
+            host = config['PIHOLE_HOSTS'][i]
+            token = config['PIHOLE_TOKENS'][i]
             # Get PiHole Stats
-            pihole_api = "{}/admin/api.php".format(host)
-            logger.info("Attempting to contact {} with URL {}".format(host, pihole_api))
+            if len(token) > 0:
+                pihole_api = "{}/admin/api.php?summaryRaw&auth={}".format(host,token)
+                logger.info("Attempting to contact {} with URL {}".format(host, pihole_api))
+            else:
+                pihole_api = "{}/admin/api.php".format(host)
+                logger.info("Attempting to contact {} with URL {}".format(host, pihole_api))
             api = requests.get(pihole_api)  # URI to pihole server api
             API_out = api.json()
             domains_being_blocked = (API_out['domains_being_blocked'])
@@ -135,6 +151,7 @@ if __name__ == '__main__':
 
             # Update DB
             send_msg(config, logger, host, domains_being_blocked, dns_queries_today, ads_percentage_today, ads_blocked_today)
+            i = i + 1
 
         # Wait...
         logger.info("Waiting {}".format(config['DELAY']))

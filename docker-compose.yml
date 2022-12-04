@@ -11,3 +11,4 @@ services:
       - INFLUXDB_DATABASE=piholestats
       - DELAY=600
       - PIHOLE_HOSTS=pi.hole,pihole2
+      - PIHOLE_TOKENS=bla,bla

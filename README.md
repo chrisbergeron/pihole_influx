@@ -6,13 +6,14 @@ A couple of basic scripts for inserting pihole data into influxdb for graphing.
 
 Configuration options:
 ``` bash
-HOSTNAMES = "ns-01" # Pi-hole hostname(s) to report in InfluxDB for each measurement. Comma separated list.
 INFLUXDB_SERVER = "127.0.0.1" # IP or hostname to InfluxDB server
 INFLUXDB_PORT = 8086 # Port on InfluxDB server
 INFLUXDB_USERNAME = "username"
 INFLUXDB_PASSWORD = "password"
 INFLUXDB_DATABASE = "piholestats"
 DELAY = 600 # seconds
+PIHOLE_HOSTS = "ns-01" # Pi-hole hostname(s) to report in InfluxDB for each measurement. Comma separated list.
+PIHOLE_TOKENS = "token1" # Pi-hole token(s) to use to connect to the API. Comma separated list. Token can be captured from value WEBPASSWORD in setupVars.conf in /etc/pihole.
 ```
 *docker-compose.yml* - An example Docker setup to run this script
 
