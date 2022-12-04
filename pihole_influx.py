@@ -68,14 +68,14 @@ def check_db_status(config, logger):
         config['INFLUXDB_USERNAME'],
         config['INFLUXDB_PASSWORD']
     )
-    for db in client.get_list_database():
-        if db['name'] == client:
-            logger.info('Found existing database {}.'.format(config['INFLUXDB_DATABASE']))
-            return True
-    else:
+
+    if {"name": config['INFLUXDB_DATABASE']} not in client.get_list_database():
         logger.info('Database {} not found. Will attempt to create it.'.format(config['INFLUXDB_DATABASE']))
         client.create_database(config['INFLUXDB_DATABASE'])
-    return True
+        return True
+    else:       
+        logger.info('Found existing database {}.'.format(config['INFLUXDB_DATABASE']))
+        return True
 
 
 def send_msg(config, logger, hostname, domains_being_blocked, dns_queries_today, ads_percentage_today, ads_blocked_today, unique_clients, unique_domains, status):
