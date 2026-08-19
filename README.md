@@ -58,3 +58,24 @@ If you get this error:
 Traceback (most recent call last): File "./pihole_influx.py", line 8, in <module> import requests ImportError: No module named requests
 ```
 You'll need to install the python-requests module.
+
+---
+
+If your **Docker build fails on a 32-bit ARM host** (e.g. Raspberry Pi on Raspbian Buster) with:
+```
+Fatal Python error: _Py_InitializeMainInterpreter: can't initialize time
+PermissionError: [Errno 1] Operation not permitted
+```
+this is the well-known `libseccomp2` / `time64` syscall problem. Newer Alpine base
+images (3.13+) use musl 1.2, which issues 64-bit-time syscalls that an old
+`libseccomp2` (< 2.4.4) blocks under Docker's default seccomp profile. Two fixes:
+
+1. **Update the host (recommended, fixes it for all containers):**
+   ```bash
+   echo 'deb http://httpredir.debian.org/debian buster-backports main contrib non-free' | \
+     sudo tee /etc/apt/sources.list.d/buster-backports.list
+   sudo apt-get update
+   sudo apt-get -t buster-backports install libseccomp2
+   ```
+2. **No host change:** this repo's `Dockerfile` is pinned to `python:3.7-alpine3.12`
+   (musl 1.1.x, no time64 syscalls), so `docker-compose build` works as-is.
