@@ -61,7 +61,7 @@ def check_db_status(config, logger):
         config['INFLUXDB_PASSWORD']
     )
     for db in client.get_list_database():
-        if db['name'] == client:
+        if db['name'] == config['INFLUXDB_DATABASE']:
             logger.info('Found existing database {}.'.format(config['INFLUXDB_DATABASE']))
             return True
     else:
